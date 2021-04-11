@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const { prototype } = require('node:events');
 
 function loginToken(payload) {
     const token = jwt.sign(payload, process.env.SECRET)
