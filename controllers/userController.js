@@ -1,6 +1,6 @@
 const { comparePassword, hashPassword } = require('../helpers/bcrypt')
 const { loginToken } = require('../helpers/jsonwebtoken')
-const firebase = require('../firebaseConfig')
+//const firebase = require('../firebaseConfig')
 const userReference = require('../config/firebaseAdmin')
 
 class userController {
@@ -37,7 +37,6 @@ class userController {
         try {
             userReference.on('value', snapshot => {
                 snapshotData = snapshot.val()
-
                 if (!snapshotData) {
                     throw ({ message: "Data Nof Found" })
                 } else if (!comparePassword(payload.password, snapshotData.password)) {
@@ -54,17 +53,26 @@ class userController {
                     })
                 }
             })
-
         } catch {
             response.status(500).json({
                 message: 'Login Failed'
             })
         }
-
     }
 
-    static async showUserData(request, response, next) {
+    static showUserData(request, response, next) {
+        let snapshotData
+        try {
+            userReference.on('value', snapshot => {
+                snapshotData = snapshot.val()
 
+                response.status(200).json({snapshot})
+            })
+        } catch {
+            response.status(500).json({
+                message: 'Error!'
+            })
+        }
     }
 }
 
