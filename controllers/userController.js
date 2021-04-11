@@ -66,7 +66,7 @@ class userController {
             userReference.on('value', snapshot => {
                 snapshotData = snapshot.val()
 
-                response.status(200).json({snapshot})
+                response.status(200).json({snapshotData})
             })
         } catch {
             response.status(500).json({
