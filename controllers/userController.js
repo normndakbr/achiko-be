@@ -5,7 +5,7 @@ const userReference = require('../config/firebaseAdmin')
 
 class userController {
     static register(request, response, next) {
-        const userId = userReference.push().key
+        //const userId = userReference.push().key
         let hashPass = hashPassword(request.body.password)
         const payload = {
             email: request.body.email,
@@ -17,15 +17,7 @@ class userController {
         }
 
         try {
-            userReference.child(userId).set(payload)
-            // firebase.database().ref('/users').set({
-            //     email: payload.email,
-            //     password: payload.password,
-            //     realName: payload.realName,
-            //     gender: payload.gender,
-            //     age: payload.age,
-            //     phoneNumber: payload.phoneNumber
-            // })
+            userReference.set(payload)
             response.status(201).json({
                 message: "Register Successfull"
             })
@@ -36,15 +28,38 @@ class userController {
         }
     }
 
-    static async login(request, response, next) {
+    static login(request, response) {
+        let snapshotData
         const payload = {
             email: request.body.email,
             password: request.body.password
         }
+        try {
+            userReference.on('value', snapshot => {
+                snapshotData = snapshot.val()
 
-        firebase.database().ref('/users' + email).on('value', function (userData) {
+                if (!snapshotData) {
+                    throw ({ message: "Data Nof Found" })
+                } else if (!comparePassword(payload.password, snapshotData.password)) {
+                    throw ({ message: "Wrong Password" })
+                } else {
+                    const access_token = loginToken({
+                        email: snapshotData.email,
+                        realName: snapshotData.realName
+                    })
+                    response.status(200).json({
+                        message: 'Login Success',
+                        email: snapshotData.email,
+                        access_token: access_token
+                    })
+                }
+            })
 
-        })
+        } catch {
+            response.status(500).json({
+                message: 'Login Failed'
+            })
+        }
 
     }
 
