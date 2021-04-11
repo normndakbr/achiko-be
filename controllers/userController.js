@@ -1,12 +1,12 @@
-const { comparePassword,  hashPassword  } = require('../helpers/bcrypt')
+const { comparePassword, hashPassword } = require('../helpers/bcrypt')
 const { loginToken } = require('../helpers/jsonwebtoken')
 const firebase = require('../firebaseConfig')
 const userReference = require('../config/firebaseAdmin')
 
 class userController {
     static register(request, response, next) {
+        const userId = userReference.push().key
         let hashPass = hashPassword(request.body.password)
-
         const payload = {
             email: request.body.email,
             password: hashPass,
@@ -16,18 +16,24 @@ class userController {
             phoneNumber: request.body.phoneNumber
         }
 
-        firebase.database().ref('/users').set({
-            email: payload.email,
-            password: payload.password,
-            realName: payload.realName,
-            gender: payload.gender,
-            age: payload.age,
-            phoneNumber: payload.phoneNumber
-        })
-
-        response.status(201).json({
-            message: "Register Successfull"
-        })
+        try {
+            userReference.child(userId).set(payload)
+            // firebase.database().ref('/users').set({
+            //     email: payload.email,
+            //     password: payload.password,
+            //     realName: payload.realName,
+            //     gender: payload.gender,
+            //     age: payload.age,
+            //     phoneNumber: payload.phoneNumber
+            // })
+            response.status(201).json({
+                message: "Register Successfull"
+            })
+        } catch (error) {
+            response.status(500).json({
+                message: "Register unsuccessfull"
+            })
+        }
     }
 
     static async login(request, response, next) {
@@ -36,7 +42,7 @@ class userController {
             password: request.body.password
         }
 
-        firebase.database().ref('/users'+email).on('value', function(userData){
+        firebase.database().ref('/users' + email).on('value', function (userData) {
 
         })
 
