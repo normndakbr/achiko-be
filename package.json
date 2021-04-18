@@ -1,0 +1,28 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "**API Documentation**",
+  "main": "app.js",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^9.6.0",
+    "firebase": "^8.3.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/normndakbr/achiko-be.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/normndakbr/achiko-be/issues"
+  },
+  "homepage": "https://github.com/normndakbr/achiko-be#readme"
+}
